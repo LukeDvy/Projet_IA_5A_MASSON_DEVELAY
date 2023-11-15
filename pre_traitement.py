@@ -1,20 +1,20 @@
 import pandas as pd
 
-users = pd.read_csv("Users.csv",low_memory=False)
-ratings=pd.read_csv("Ratings.csv",low_memory=False)
-books=pd.read_csv("Books.csv",low_memory=False)
+users = pd.read_csv("archive/Users.csv",low_memory=False)
+ratings=pd.read_csv("archive/Ratings.csv",low_memory=False)
+books=pd.read_csv("archive/Books.csv",low_memory=False)
 
 books = books.drop(columns=["Image-URL-S","Image-URL-M","Image-URL-L"])
 print(users)
 
 users=users.dropna()
-users=users.drop_duplicates()
+users=users.drop_duplicates(subset="User-ID")
 
 ratings=ratings.dropna()
 ratings=ratings.drop_duplicates(subset=["User-ID","ISBN"], keep="last") #verifie qu'un lecteur a noté une seule fois un livre
 
 books=books.dropna()
-books=books.drop_duplicates()
+books=books.drop_duplicates(subset="ISBN")
 
 
 df_final=pd.merge(books, ratings, on="ISBN", how="inner")
@@ -28,4 +28,4 @@ print(df_final)
 
 #print(df_final[df_final["Book-Title"]=="The Way Things Work: An Illustrated Encyclopedia of Technology"])
 
-df_final.to_csv('datas.csv', index=False)
+df_final.to_csv('archive/datas.csv', index=False)
