@@ -116,8 +116,8 @@ user_genre_encoded = genre_enc.transform([user_genre])[0]
 
 predicted_rating = model.predict([pd.Series([user_age]), pd.Series([user_location_encoded]),
                                   pd.Series([user_author_encoded]), pd.Series([user_book_title_encoded]), pd.Series([user_genre_encoded])])
-
-# print(predicted_rating) # affiche une note sur 10
+#Ajout d'un compteur pour raccourcir le temps d'execution
+compteur = 0
 for idx, row in data_fin.iterrows():
     user_author = str(row['Book-Author'])
     user_book_title = str(row['Book-Title'])
@@ -127,6 +127,11 @@ for idx, row in data_fin.iterrows():
     predicted_rating = model.predict([pd.Series([user_age]), pd.Series([user_location_encoded]),
                                     pd.Series([user_author_encoded]), pd.Series([user_book_title_encoded]), pd.Series([user_genre_encoded])])
     data_fin.loc[idx, "rating"] = predicted_rating[0]
+
+    compteur = compteur + 1
+
+    if compteur == 1000:
+        break
 
 data_fin = data_fin.sort_values(by="rating",ascending=False)
 print(data_fin.head(10))
