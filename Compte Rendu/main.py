@@ -105,10 +105,8 @@ user_location = 'victoria, british columbia, canada'  # Remplacez cela par le li
 user_genre = 'Science Fiction'
 
 
-user_author = 'Gerald Holton'  # Remplacez cela par l'auteur préféré de l'utilisateur
-user_book_title = 'Clara Callan'  # Remplacez cela par le livre préféré de l'utilisateur
-
-## peut etre parcourir tout les livres
+user_author = 'John Wyndham'  # Remplacez cela par l'auteur préféré de l'utilisateur
+user_book_title = 'The Day of the Triffids'  # Remplacez cela par le livre préféré de l'utilisateur
 
 user_location_encoded = location_enc.transform([user_location])[0]
 user_author_encoded = author_enc.transform([user_author])[0]
@@ -119,8 +117,7 @@ user_genre_encoded = genre_enc.transform([user_genre])[0]
 predicted_rating = model.predict([pd.Series([user_age]), pd.Series([user_location_encoded]),
                                   pd.Series([user_author_encoded]), pd.Series([user_book_title_encoded]), pd.Series([user_genre_encoded])])
 
-print(predicted_rating) # affiche une note sur 10
-compteur=0
+# print(predicted_rating) # affiche une note sur 10
 for idx, row in data_fin.iterrows():
     user_author = str(row['Book-Author'])
     user_book_title = str(row['Book-Title'])
@@ -129,13 +126,7 @@ for idx, row in data_fin.iterrows():
     user_book_title_encoded = book_enc.transform([user_book_title])[0]
     predicted_rating = model.predict([pd.Series([user_age]), pd.Series([user_location_encoded]),
                                     pd.Series([user_author_encoded]), pd.Series([user_book_title_encoded]), pd.Series([user_genre_encoded])])
-
-    print(predicted_rating) # affiche une note sur 10
-    data_fin.loc[idx, "rating"] = predicted_rating
-    compteur+=1
-    if(compteur==500):
-        break
-
+    data_fin.loc[idx, "rating"] = predicted_rating[0]
 
 data_fin = data_fin.sort_values(by="rating",ascending=False)
 print(data_fin.head(10))
