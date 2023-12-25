@@ -1,8 +1,8 @@
 import pandas as pd
 
-users = pd.read_csv("archive/Users.csv", low_memory=False)
-ratings = pd.read_csv("archive/Ratings.csv", low_memory=False)
-books = pd.read_csv("archive/Books.csv", low_memory=False)
+users = pd.read_csv("Compte Rendu/archive/Users.csv", low_memory=False)
+ratings = pd.read_csv("Compte Rendu/archive/Ratings.csv", low_memory=False)
+books = pd.read_csv("Compte Rendu/archive/Books.csv", low_memory=False)
 
 books = books.drop(columns=["Image-URL-S", "Image-URL-M", "Image-URL-L"])
 

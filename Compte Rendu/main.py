@@ -6,8 +6,8 @@ from keras.layers import Input, Embedding, Flatten, Dense, Concatenate
 from keras.callbacks import ModelCheckpoint
 
 # Charger les données
-data = pd.read_csv('archive/final_datas.csv', nrows=10000)
-data_fin = pd.read_csv('archive/final_datas.csv', nrows=10000)
+data = pd.read_csv('Compte Rendu/archive/final_datas.csv', nrows=10000)
+data_fin = pd.read_csv('Compte Rendu/archive/final_datas.csv', nrows=10000)
 data_fin = data_fin.drop(columns=["ISBN","Year-Of-Publication","Publisher","User-ID","Book-Rating","Location","Age","Nouns","Cluster","Cluster-Tag"])
 
 # Prétraitement des données
