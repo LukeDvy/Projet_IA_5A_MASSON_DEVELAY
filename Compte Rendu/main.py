@@ -8,21 +8,43 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
+df = pd.read_csv('archive/final_datas.csv')
+
+
+user_age_list = df.groupby('Age').agg(list).to_dict()['book-title']
+user_location_list=df.groupby('Location').agg(list).to_dict()['book-title']
+user_genre_list=df.groupby('Cluster-Tag').agg(list).to_dict()['book-title']
+user_author_list=df.groupby('Book-Author').agg(list).to_dict()['book-title']
+user_book_title_list=df.groupby('Book-Title').agg(list).to_dict()
+
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html',user_age_list=user_age_list,user_location_list=user_location_list,user_genre_list=user_genre_list,user_author_list=user_author_list,user_book_title_list=user_book_title_list)
 
-@app.route('/', methods=['POST'])
+# @app.route('/', methods=['POST'])
 def test():
     user_age = request.form['user_age']
     return user_age
 
-
+@app.route('/', methods=['POST'])
 def search():
 
+
+    user_age = request.form['user_age']
+    user_location = request.form['user_location']
+    user_genre = request.form['user_genre']
+    user_author = request.form['user_author']
+    user_book_title = request.form['user_book_title']
+
+    if user_age == "" or user_location == "" or user_genre == "" or user_author == "" or user_book_title == "":
+        return "Failed, empty value"
+
+
+
     # Charger les données
-    data = pd.read_csv('Compte Rendu/archive/final_datas.csv', nrows=10000)
-    data_fin = pd.read_csv('Compte Rendu/archive/final_datas.csv', nrows=10000)
+    data = pd.read_csv('archive/final_datas.csv', nrows=10000)
+    data_fin = pd.read_csv('archive/final_datas.csv', nrows=10000)
     data_fin = data_fin.drop(columns=["ISBN","Year-Of-Publication","Publisher","User-ID","Book-Rating","Location","Age","Nouns","Cluster","Cluster-Tag"])
 
     # Prétraitement des données
@@ -112,12 +134,6 @@ def search():
 
     # Charger le meilleur modèle
     model.load_weights('best_model.h5')
-
-
-
-
-    
-
 
     # user_age = 30  # Remplacez cela par l'âge de l'utilisateur
     # user_location = 'victoria, british columbia, canada'  # Remplacez cela par le lieu de l'utilisateur

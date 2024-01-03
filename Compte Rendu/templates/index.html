@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA project</title>
+</head>
+<body>
+    <h1>BookWiseAI</h1>
+    <form method="post" action="/">
+        <label for="user_age">user_age:</label>
+        <input list="user_age_list" name="user_age" id="user_age" value="{{ user_age }}">
+        <datalist id="user_age_list">
+            {% for item in user_age_list %}
+                <option value="{{ item }}">
+            {% endfor %}
+        </datalist>
+        
+        <label for="user_location">user_location:</label>
+        <input list="user_location_list" name="user_location" id="user_location" value="{{ user_location }}">
+        <datalist id="user_location_list">
+            {% for item in user_location_list %}
+                <option value="{{ item }}">
+            {% endfor %}
+        </datalist>
+
+        <label for="user_genre">user_genre:</label>
+        <input list="user_genre" name="user_genre" id="user_genre" value="{{ user_genre }}">
+        <datalist id="user_genre_list">
+            {% for item in user_genre_list %}
+                <option value="{{ item }}">
+            {% endfor %}
+        </datalist>
+
+        <label for="user_author">user_author:</label>
+        <input list="user_author_list" name="user_author" id="user_author" value="{{ user_author }}">
+        <datalist id="user_author_list">
+            {% for item in user_author_list %}
+                <option value="{{ item }}">
+            {% endfor %}
+        </datalist>
+
+        <label for="user_book_title">user_book_title:</label>
+        <input list="user_book_title_list" name="user_book_title" id="user_book_title" value="{{ user_book_title }}">
+        <datalist id="user_book_title_list">
+            {% for item in user_book_title_list %}
+                <option value="{{ item }}">
+            {% endfor %}
+        </datalist>
+        
+
+        <button type="submit">Search</button>
+    </form>
+
+</body>
+</html>
