@@ -5,27 +5,55 @@ from keras.models import Model
 from keras.layers import Input, Embedding, Flatten, Dense, Concatenate
 from keras.callbacks import ModelCheckpoint
 from flask import Flask, render_template, request
+import csv
+import json
 
 app = Flask(__name__)
 
-df = pd.read_csv('archive/final_datas.csv')
+nrow_limit = 10000
+
+def read_csv_file(file_path):
+    age_set = set()
+    location_set = set()
+    genre_set = set()
+    publisher_set = set()
+    title_set = set()
+
+    index = 0
+
+    with open(file_path, 'r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
 
 
-user_age_list = df.groupby('Age').agg(list).to_dict()['book-title']
-user_location_list=df.groupby('Location').agg(list).to_dict()['book-title']
-user_genre_list=df.groupby('Cluster-Tag').agg(list).to_dict()['book-title']
-user_author_list=df.groupby('Book-Author').agg(list).to_dict()['book-title']
-user_book_title_list=df.groupby('Book-Title').agg(list).to_dict()
+
+        for row in csv_reader:
+
+            if index < nrow_limit:
+                age_set.add(row['Age'])
+                location_set.add(row['Location'])
+                genre_set.add(row['Cluster-Tag'])
+                publisher_set.add(row['Publisher'])
+                title_set.add(row['Book-Title'])
+                index = index + 1
+
+    return list(age_set), list(location_set), list(genre_set), list(publisher_set), list(title_set)
+
 
 
 @app.route('/')
 def index():
-    return render_template('index.html',user_age_list=user_age_list,user_location_list=user_location_list,user_genre_list=user_genre_list,user_author_list=user_author_list,user_book_title_list=user_book_title_list)
+    # Provide the path to your CSV file
+    csv_file_path = 'archive/final_datas.csv'
 
-# @app.route('/', methods=['POST'])
-def test():
-    user_age = request.form['user_age']
-    return user_age
+    user_age_list, user_location_list, user_genre_list, user_author_list, user_book_title_list = read_csv_file(csv_file_path)
+
+    user_age_list.sort()
+    user_location_list.sort()
+    user_genre_list.sort()
+    user_author_list.sort()
+    user_book_title_list.sort()
+
+    return render_template('index.html',user_age_list=user_age_list,user_location_list=user_location_list,user_genre_list=user_genre_list,user_author_list=user_author_list,user_book_title_list=user_book_title_list)
 
 @app.route('/', methods=['POST'])
 def search():
@@ -43,15 +71,25 @@ def search():
 
 
     # Charger les données
-    data = pd.read_csv('archive/final_datas.csv', nrows=10000)
-    data_fin = pd.read_csv('archive/final_datas.csv', nrows=10000)
+    data = pd.read_csv('archive/final_datas.csv', nrows=nrow_limit)
+    data_fin = pd.read_csv('archive/final_datas.csv', nrows=nrow_limit)
     data_fin = data_fin.drop(columns=["ISBN","Year-Of-Publication","Publisher","User-ID","Book-Rating","Location","Age","Nouns","Cluster","Cluster-Tag"])
 
     # Prétraitement des données
+        
     user_enc = LabelEncoder()
-    data['User_ID'] = user_enc.fit_transform(data['User-ID'].values)
+    location_enc = LabelEncoder()
+    author_enc = LabelEncoder()
+    book_enc = LabelEncoder()
+    genre_enc = LabelEncoder()
 
-    n_users = data['User_ID'].nunique()
+    user_enc.fit(data['User-ID'].values)
+    location_enc.fit(data['Location'].astype(str))
+    author_enc.fit(data['Book-Author'].astype(str))
+    book_enc.fit(data['Book-Title'].astype(str))
+    genre_enc.fit(data['Cluster-Tag'].astype(str))
+
+    n_users = data['User-ID'].nunique()
     n_books = data['ISBN'].nunique()
 
     # Prétraitement de données pour la prédiction
@@ -143,10 +181,13 @@ def search():
     # user_author = 'John Wyndham'  # Remplacez cela par l'auteur préféré de l'utilisateur
     # user_book_title = 'The Day of the Triffids'  # Remplacez cela par le livre préféré de l'utilisateur
 
-    user_location_encoded = location_enc.transform([user_location])[0]
-    user_author_encoded = author_enc.transform([user_author])[0]
-    user_book_title_encoded = book_enc.transform([user_book_title])[0]
-    user_genre_encoded = genre_enc.transform([user_genre])[0]
+    # Prétraitement de données pour la prédiction
+    user_age = float(user_age)
+    user_location_encoded = location_enc.transform([user_location])[0] if user_location in location_enc.classes_ else 0
+    user_author_encoded = author_enc.transform([user_author])[0] if user_author in author_enc.classes_ else 0
+    user_book_title_encoded = book_enc.transform([user_book_title])[0] if user_book_title in book_enc.classes_ else 0
+    user_genre_encoded = genre_enc.transform([user_genre])[0] if user_genre in genre_enc.classes_ else 0
+   
 
 
     predicted_rating = model.predict([pd.Series([user_age]), pd.Series([user_location_encoded]),
@@ -165,12 +206,23 @@ def search():
 
         compteur = compteur + 1
 
-        if compteur == 1000:
+        if compteur == 100:
             break
 
     data_fin = data_fin.sort_values(by="rating",ascending=False)
     print(data_fin.head(10))
-    return data_fin.head(10)
+    top_10_recommendations = data_fin.head(10).values.tolist()
+
+    # Concatenate values and add a space between them
+    # Format each recommendation as "Book-Title Book-Author rating"
+
+
+
+    result_list = ['Vos informations: ' + 'user_age: ' + f"{user_age}" + ' user_author: ' + f"{user_author}" + ' user_location: ' + f"{user_location}" + ' user_book_title: ' + f"{user_book_title}" + 'user_genre: ' + f"{user_genre}"] + ['Book-Title; Book-Author; Rating'] + ['; '.join(map(str, recommendation[:-1])) + f"; {recommendation[-1]}" for recommendation in top_10_recommendations]
+    # Convert the list to a string
+    result_string = '<br><br>'.join(result_list)
+
+    return result_string
 
 
 if __name__ == '__main__':

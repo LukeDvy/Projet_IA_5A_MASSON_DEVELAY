@@ -15,7 +15,7 @@
                 <option value="{{ item }}">
             {% endfor %}
         </datalist>
-        
+
         <label for="user_location">user_location:</label>
         <input list="user_location_list" name="user_location" id="user_location" value="{{ user_location }}">
         <datalist id="user_location_list">
@@ -25,7 +25,7 @@
         </datalist>
 
         <label for="user_genre">user_genre:</label>
-        <input list="user_genre" name="user_genre" id="user_genre" value="{{ user_genre }}">
+        <input list="user_genre_list" name="user_genre" id="user_genre" value="{{ user_genre }}">
         <datalist id="user_genre_list">
             {% for item in user_genre_list %}
                 <option value="{{ item }}">
