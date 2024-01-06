@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #222;
+            color: #fff;
+        }
+
+        h1, h2 {
+            color: #56539e;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            color: #fff;
+        }
+
+        th, td {
+            border: 1px solid #444;
+            text-align: left;
+            padding: 12px;
+        }
+
+        th {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vos informations</h1>
+    <p>User Age: {{ user_info.user_age }}</p>
+    <p>User Author: {{ user_info.user_author }}</p>
+    <p>User Location: {{ user_info.user_location }}</p>
+    <p>User Book Title: {{ user_info.user_book_title }}</p>
+    <p>User Genre: {{ user_info.user_genre }}</p>
+
+    <h2>Résultats</h2>
+    <table>
+        <thead>
+            <tr>
+                {% for col in recommendations.columns %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in recommendations.iterrows() %}
+                <tr>
+                    {% for value in row %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

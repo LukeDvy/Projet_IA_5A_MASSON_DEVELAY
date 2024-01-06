@@ -42,7 +42,6 @@ def read_csv_file(file_path):
 
 @app.route('/')
 def index():
-    # Provide the path to your CSV file
     csv_file_path = 'archive/final_datas.csv'
 
     user_age_list, user_location_list, user_genre_list, user_author_list, user_book_title_list = read_csv_file(csv_file_path)
@@ -173,14 +172,6 @@ def search():
     # Charger le meilleur modèle
     model.load_weights('best_model.h5')
 
-    # user_age = 30  # Remplacez cela par l'âge de l'utilisateur
-    # user_location = 'victoria, british columbia, canada'  # Remplacez cela par le lieu de l'utilisateur
-    # user_genre = 'Science Fiction'
-
-
-    # user_author = 'John Wyndham'  # Remplacez cela par l'auteur préféré de l'utilisateur
-    # user_book_title = 'The Day of the Triffids'  # Remplacez cela par le livre préféré de l'utilisateur
-
     # Prétraitement de données pour la prédiction
     user_age = float(user_age)
     user_location_encoded = location_enc.transform([user_location])[0] if user_location in location_enc.classes_ else 0
@@ -211,18 +202,20 @@ def search():
 
     data_fin = data_fin.sort_values(by="rating",ascending=False)
     print(data_fin.head(10))
-    top_10_recommendations = data_fin.head(10).values.tolist()
 
-    # Concatenate values and add a space between them
-    # Format each recommendation as "Book-Title Book-Author rating"
+    # affichage des resultats
+    top_10_recommendations = data_fin.head(10)
 
+    user_info = {
+        "user_age": user_age,
+        "user_author": user_author,
+        "user_location": user_location,
+        "user_book_title": user_book_title,
+        "user_genre": user_genre
+    }
 
+    return render_template('resultats.html', user_info=user_info, recommendations=top_10_recommendations)
 
-    result_list = ['Vos informations: ' + 'user_age: ' + f"{user_age}" + ' user_author: ' + f"{user_author}" + ' user_location: ' + f"{user_location}" + ' user_book_title: ' + f"{user_book_title}" + 'user_genre: ' + f"{user_genre}"] + ['Book-Title; Book-Author; Rating'] + ['; '.join(map(str, recommendation[:-1])) + f"; {recommendation[-1]}" for recommendation in top_10_recommendations]
-    # Convert the list to a string
-    result_string = '<br><br>'.join(result_list)
-
-    return result_string
 
 
 if __name__ == '__main__':

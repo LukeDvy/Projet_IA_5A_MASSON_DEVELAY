@@ -4,6 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IA project</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #222;
+            color: #fff;
+        }
+
+        h1 {
+            color: #56539e;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            margin-top: 10px;
+            color: #83b8ce;
+        }
+
+        input {
+            margin-top: 5px;
+            padding: 8px;
+            border: 1px solid #444;
+            background-color: #333;
+            color: #fff;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #4a727c;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #26363e;
+        }
+    </style>
 </head>
 <body>
     <h1>BookWiseAI</h1>
@@ -48,9 +94,7 @@
             {% endfor %}
         </datalist>
         
-
         <button type="submit">Search</button>
     </form>
-
 </body>
 </html>
