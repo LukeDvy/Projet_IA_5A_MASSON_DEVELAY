@@ -16,7 +16,7 @@ def read_csv_file(file_path):
     age_set = set()
     location_set = set()
     genre_set = set()
-    publisher_set = set()
+    author_set = set()
     title_set = set()
 
     index = 0
@@ -32,11 +32,11 @@ def read_csv_file(file_path):
                 age_set.add(row['Age'])
                 location_set.add(row['Location'])
                 genre_set.add(row['Cluster-Tag'])
-                publisher_set.add(row['Publisher'])
+                author_set.add(row['Book-Author'])
                 title_set.add(row['Book-Title'])
                 index = index + 1
 
-    return list(age_set), list(location_set), list(genre_set), list(publisher_set), list(title_set)
+    return list(age_set), list(location_set), list(genre_set), list(author_set), list(title_set)
 
 
 
