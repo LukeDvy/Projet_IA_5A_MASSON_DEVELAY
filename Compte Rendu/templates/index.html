@@ -54,7 +54,7 @@
 <body>
     <h1>BookWiseAI</h1>
     <form method="post" action="/">
-        <label for="user_age">user_age:</label>
+        <label for="user_age">Age</label>
         <input list="user_age_list" name="user_age" id="user_age" value="{{ user_age }}">
         <datalist id="user_age_list">
             {% for item in user_age_list %}
@@ -62,7 +62,7 @@
             {% endfor %}
         </datalist>
 
-        <label for="user_location">user_location:</label>
+        <label for="user_location">Localité</label>
         <input list="user_location_list" name="user_location" id="user_location" value="{{ user_location }}">
         <datalist id="user_location_list">
             {% for item in user_location_list %}
@@ -70,7 +70,7 @@
             {% endfor %}
         </datalist>
 
-        <label for="user_genre">user_genre:</label>
+        <label for="user_genre">Genre de livre</label>
         <input list="user_genre_list" name="user_genre" id="user_genre" value="{{ user_genre }}">
         <datalist id="user_genre_list">
             {% for item in user_genre_list %}
@@ -78,7 +78,7 @@
             {% endfor %}
         </datalist>
 
-        <label for="user_author">user_author:</label>
+        <label for="user_author">Auteur préféré</label>
         <input list="user_author_list" name="user_author" id="user_author" value="{{ user_author }}">
         <datalist id="user_author_list">
             {% for item in user_author_list %}
@@ -86,7 +86,7 @@
             {% endfor %}
         </datalist>
 
-        <label for="user_book_title">user_book_title:</label>
+        <label for="user_book_title">Livre préféré</label>
         <input list="user_book_title_list" name="user_book_title" id="user_book_title" value="{{ user_book_title }}">
         <datalist id="user_book_title_list">
             {% for item in user_book_title_list %}
@@ -94,7 +94,7 @@
             {% endfor %}
         </datalist>
         
-        <button type="submit">Search</button>
+        <button type="submit">Rechercher</button>
     </form>
 </body>
 </html>
